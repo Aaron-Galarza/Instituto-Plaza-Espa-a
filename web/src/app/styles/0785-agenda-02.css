@@ -1,0 +1,143 @@
+.timeline-lane {
+  position: relative;
+  margin-left: 64px;
+  border-left: 1px solid var(--line-strong);
+}
+
+.event {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 7px;
+  overflow: hidden;
+  border: 1px solid rgba(31, 82, 151, 0.28);
+  border-left: 3px solid var(--blue);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--blue) 5%, var(--white));
+  text-align: left;
+  font-size: 0.7rem;
+  color: var(--ink);
+  transition:
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.event:hover {
+  z-index: 6;
+  box-shadow: 0 10px 24px -16px rgba(29, 30, 28, 0.6);
+}
+
+.event[data-status='modified'] {
+  border-color: var(--slate);
+  border-left-color: var(--slate);
+  background: var(--mist);
+}
+
+.event[data-status='cancelled'] {
+  opacity: 0.48;
+  text-decoration: line-through;
+  border-style: dashed;
+}
+
+.event[data-status='pending_resolution'] {
+  border-left-style: double;
+  border-left-width: 5px;
+}
+
+.event[data-has-conflict='true'] {
+  border-color: var(--ink);
+}
+
+.event-time {
+  font-weight: 650;
+  font-size: 0.64rem;
+  color: var(--slate);
+  font-variant-numeric: tabular-nums;
+}
+
+.event-name {
+  font-family: 'Albert Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-service {
+  color: var(--slate);
+  font-size: 0.64rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-bars {
+  display: flex;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.event-bars span {
+  display: block;
+  height: 3px;
+  flex: 1;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: 54px repeat(7, minmax(130px, 1fr));
+  background: var(--white);
+  border: 1px solid var(--line);
+  overflow: auto;
+}
+
+.week-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line);
+  background: var(--white);
+}
+
+.week-head:first-child {
+  border-left: 0;
+  background: var(--mist);
+}
+
+.week-head strong {
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.week-head span {
+  font-size: 0.66rem;
+  color: var(--slate);
+}
+
+.week-head[data-today='true'] {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.week-head[data-today='true'] span {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.week-body {
+  display: contents;
+}
+
+.week-time {
+  position: relative;
+  height: 60px;
+  border-bottom: 1px solid var(--line);
+  background: var(--mist);
+}

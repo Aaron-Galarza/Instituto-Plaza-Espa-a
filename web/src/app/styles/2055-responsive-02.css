@@ -1,0 +1,13 @@
+.grouped-day-row:hover,
+.grouped-day-row:focus-visible {
+  background: var(--blue-soft);
+}
+
+@media (max-width: 700px) {
+  .grouped-day-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .grouped-day-row > :nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "plaza-espana",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistema integral de gestión y planificación de rehabilitación - Instituto Plaza España",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@typescript-eslint/typescript-estree>minimatch": "^11.0.1",
+      "eslint>minimatch": "^11.0.1",
+      "@eslint/config-array>minimatch": "^11.0.1",
+      "webpack": "^5.112.0"
+    }
+  },
+  "scripts": {
+    "build:shared": "pnpm --filter @plaza/shared build",
+    "dev": "pnpm build:shared && concurrently -k -n API,WEB -c blue,green \"pnpm --filter @plaza/api dev\" \"pnpm --filter @plaza/web dev\"",
+    "dev:api": "pnpm build:shared && pnpm --filter @plaza/api dev",
+    "dev:web": "pnpm build:shared && pnpm --filter @plaza/web dev",
+    "build": "pnpm build:shared && pnpm --filter @plaza/api build && pnpm --filter @plaza/web build",
+    "start": "concurrently -k -n API,WEB -c blue,green \"pnpm --filter @plaza/api start\" \"pnpm --filter @plaza/web start\"",
+    "test": "pnpm build:shared && pnpm --filter @plaza/api test",
+    "test:watch": "pnpm --filter @plaza/api test:watch",
+    "typecheck": "pnpm build:shared && pnpm --filter @plaza/api typecheck && pnpm --filter @plaza/web typecheck",
+    "lint": "eslint .",
+    "check:lines": "node api/scripts/check-file-lengths.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "eslint": "^10.14.0",
+    "typescript-eslint": "^8.72.1"
+  }
+}

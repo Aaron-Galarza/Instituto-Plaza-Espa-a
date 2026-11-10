@@ -1,0 +1,53 @@
+/* ------------------------------------------------------------------ */
+
+/* Type & headings                                                     */
+
+/* ------------------------------------------------------------------ */
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.page-head h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.75rem);
+  font-weight: 650;
+}
+
+.page-head .lede {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  color: var(--slate);
+  font-size: 0.9rem;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.muted {
+  color: var(--slate);
+}
+
+.small {
+  font-size: 0.78rem;
+}
+
+.tiny {
+  font-size: 0.68rem;
+}

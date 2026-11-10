@@ -1,0 +1,144 @@
+/* ------------------------------------------------------------------ */
+
+/* Agenda                                                              */
+
+/* ------------------------------------------------------------------ */
+
+.agenda-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.date-display {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.date-display .day-number {
+  font-family: 'Albert Sans', sans-serif;
+  font-size: clamp(3.2rem, 6vw, 5rem);
+  font-weight: 650;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: var(--ink);
+}
+
+.date-display .date-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.date-display .month-name {
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+.date-display .year {
+  color: var(--slate);
+  font-size: 0.78rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--white);
+}
+
+.segmented button {
+  border: 0;
+  background: transparent;
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  color: var(--slate);
+}
+
+.segmented button[data-active='true'] {
+  background: var(--blue);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.agenda-summary {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: 18px;
+}
+
+.summary-item {
+  flex: 1 1 120px;
+  padding: 12px 16px 12px 0;
+  border-right: 1px solid var(--line);
+}
+
+.summary-item:last-child {
+  border-right: 0;
+}
+
+.summary-item strong {
+  display: block;
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.summary-item span {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.68rem;
+  color: var(--slate);
+}
+
+.timeline {
+  position: relative;
+  overflow: auto;
+  max-height: calc(100vh - 250px);
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.timeline-inner {
+  position: relative;
+  min-width: 620px;
+}
+
+.hour-row {
+  height: 64px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hour-row:last-child {
+  border-bottom: 0;
+}
+
+.hour-label {
+  position: absolute;
+  left: 0;
+  width: 58px;
+  padding-right: 8px;
+  text-align: right;
+  transform: translateY(-7px);
+  font-size: 0.66rem;
+  color: var(--slate);
+  font-variant-numeric: tabular-nums;
+}

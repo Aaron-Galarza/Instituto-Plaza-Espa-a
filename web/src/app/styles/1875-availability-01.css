@@ -1,0 +1,140 @@
+/* ------------------------------------------------------------------ */
+
+/* Availability & requests                                             */
+
+/* ------------------------------------------------------------------ */
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 15px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--blue);
+  background: var(--white);
+  color: var(--slate);
+  font-size: 0.79rem;
+  line-height: 1.5;
+}
+
+.notice[data-tone='warning'] {
+  border-left-color: var(--ink);
+  background: color-mix(in srgb, var(--mist) 42%, var(--white));
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 6px;
+  margin-left: 7px;
+  border-radius: 999px;
+  background: var(--mist);
+  color: var(--slate);
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.tab-count[data-alert='true'] {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.issue-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.issue-row {
+  display: grid;
+  grid-template-columns: 172px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.issue-row:last-child {
+  border-bottom: 0;
+}
+
+.issue-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.issue-date strong {
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.issue-date span {
+  font-size: 0.68rem;
+  color: var(--slate);
+}
+
+.issue-main {
+  min-width: 0;
+}
+
+.issue-main .row-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.issue-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.plain-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plain-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+}
+
+.plain-list li:last-child {
+  border-bottom: 0;
+}
+
+.color-input {
+  width: 36px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--white);
+  cursor: pointer;
+}

@@ -1,0 +1,136 @@
+/* ------------------------------------------------------------------ */
+
+/* Auth                                                               */
+
+/* ------------------------------------------------------------------ */
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+}
+
+.auth-brand {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(30px, 5vw, 68px);
+  background: var(--blue);
+  color: var(--white);
+}
+
+.auth-brand::after {
+  content: '';
+  position: absolute;
+  right: -220px;
+  bottom: -260px;
+  width: 640px;
+  height: 640px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 70px rgba(255, 255, 255, 0.035),
+    0 0 0 150px rgba(255, 255, 255, 0.025);
+  pointer-events: none;
+}
+
+.auth-brand h1 {
+  position: relative;
+  z-index: 1;
+  max-width: 13ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4.6rem);
+  font-weight: 600;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+}
+
+.auth-brand .auth-sub {
+  position: relative;
+  z-index: 1;
+  max-width: 40ch;
+  margin-top: 22px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.95rem;
+}
+
+.auth-brand-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-brand-logo {
+  display: block;
+  width: min(300px, 55vw);
+  height: auto;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--white);
+}
+
+.auth-brand-identity span {
+  font-family: var(--pe-font-body);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-panel {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(28px, 5vw, 64px);
+  background: var(--white);
+}
+
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  right: -110px;
+  bottom: -125px;
+  width: min(470px, 70vw);
+  aspect-ratio: 711 / 684;
+  background: url('/brand/composicion-geometrica.png') center / contain no-repeat;
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.auth-form {
+  position: relative;
+  width: min(410px, 100%);
+}
+
+.auth-form h2 {
+  margin: 0 0 6px;
+  font-size: 2rem;
+  font-weight: 650;
+}
+
+.auth-form .auth-lede {
+  margin: 0 0 26px;
+  color: var(--slate);
+  font-size: 0.88rem;
+}
+
+.auth-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-foot {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--slate);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}

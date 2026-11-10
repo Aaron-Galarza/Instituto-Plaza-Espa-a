@@ -1,0 +1,40 @@
+.truncate-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.week-head {
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line);
+  text-align: left;
+  cursor: pointer;
+}
+
+.month-chip {
+  border: 0;
+  border-left: 2px solid var(--blue);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.62rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.month-chip[data-status='modified'] {
+  border-left-color: var(--slate);
+  background: var(--mist);
+}
+
+.month-chip[data-status='pending_resolution'] {
+  border-left-width: 4px;
+  border-left-color: var(--ink);
+}
+
+.month-chip[data-status='cancelled'] {
+  opacity: 0.5;
+  border-left-style: dashed;
+  text-decoration: line-through;
+}

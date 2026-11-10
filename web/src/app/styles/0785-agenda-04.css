@@ -1,0 +1,140 @@
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend i {
+  width: 8px;
+  height: 8px;
+  display: block;
+  border-radius: 1px;
+  background: var(--blue);
+}
+
+.legend i[data-kind='modified'] {
+  background: var(--slate);
+}
+
+.legend i[data-kind='pending'] {
+  background: var(--ink);
+}
+
+.legend i[data-kind='cancelled'] {
+  background: transparent;
+  border: 1px dashed var(--slate);
+}
+
+.week-shell {
+  background: var(--white);
+  border: 1px solid var(--line);
+}
+
+.week-header {
+  display: grid;
+  grid-template-columns: 58px repeat(7, minmax(112px, 1fr));
+  border-bottom: 1px solid var(--line-strong);
+  min-width: 850px;
+}
+
+.week-corner {
+  background: var(--mist);
+  border-right: 1px solid var(--line-strong);
+}
+
+.week-scroll {
+  overflow: auto;
+  max-height: calc(100vh - 300px);
+}
+
+.week-bodygrid {
+  display: grid;
+  grid-template-columns: 58px repeat(7, minmax(112px, 1fr));
+  position: relative;
+  min-width: 850px;
+}
+
+.week-times {
+  position: relative;
+  background: var(--mist);
+  border-right: 1px solid var(--line-strong);
+}
+
+.week-time-label {
+  position: absolute;
+  right: 7px;
+  transform: translateY(-6px);
+  font-size: 0.64rem;
+  color: var(--slate);
+  font-variant-numeric: tabular-nums;
+}
+
+.week-lane {
+  position: relative;
+  border-left: 1px solid var(--line);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 59px,
+    var(--line) 59px,
+    var(--line) 60px
+  );
+}
+
+.week-event {
+  position: absolute;
+  padding: 3px 5px;
+  border: 1px solid rgba(31, 82, 151, 0.25);
+  border-left: 3px solid var(--blue);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--blue) 5%, var(--white));
+  font-size: 0.64rem;
+  overflow: hidden;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.week-event strong {
+  display: block;
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.week-event span {
+  color: var(--slate);
+  font-size: 0.6rem;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.week-event[data-status='modified'] {
+  border-left-color: var(--slate);
+  background: var(--mist);
+}
+
+.week-event[data-status='pending_resolution'] {
+  border-left-width: 5px;
+  border-left-style: double;
+  border-left-color: var(--ink);
+}
+
+.week-event[data-status='cancelled'] {
+  opacity: 0.45;
+  border-style: dashed;
+}
+
+.week-event[data-conflict='true'] {
+  border-color: var(--ink);
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}

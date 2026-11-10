@@ -1,0 +1,100 @@
+/* ------------------------------------------------------------------ */
+
+/* Dashboard                                                           */
+
+/* ------------------------------------------------------------------ */
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  border-top: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line);
+  background: var(--white);
+}
+
+.metric {
+  padding: 14px 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.metric strong {
+  display: block;
+  font-family: 'Albert Sans', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 650;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric span {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.68rem;
+  color: var(--slate);
+}
+
+.metric[data-accent='true'] {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.metric[data-accent='true'] span {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 150px;
+  padding-top: 10px;
+}
+
+.chart-bar {
+  flex: 1;
+  min-width: 4px;
+  background: var(--blue);
+  border-radius: 1px 1px 0 0;
+  position: relative;
+}
+
+.chart-bar[data-zero='true'] {
+  background: var(--line);
+}
+
+.chart-bar:hover {
+  background: var(--ink);
+}
+
+.bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.76rem;
+}
+
+.bar-track {
+  height: 8px;
+  background: var(--mist);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: var(--blue);
+}
