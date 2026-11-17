@@ -15,6 +15,7 @@ export function useOccurrenceActions(occurrence: ScheduleOccurrence | null, onCl
     void queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     void queryClient.invalidateQueries({ queryKey: ['change-requests'] });
     void queryClient.invalidateQueries({ queryKey: ['group-occupancy'] });
+    void queryClient.invalidateQueries({ queryKey: ['group-block'] });
   };
 
   const finish = useMutation({

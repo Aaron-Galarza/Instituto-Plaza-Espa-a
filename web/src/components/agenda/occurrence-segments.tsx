@@ -3,6 +3,25 @@
 import type { ScheduleOccurrence } from '@plaza/shared';
 import { Button } from '@/components/ui';
 import { timeRange } from '@/lib/format';
+import { useGroupBlockParticipants } from './use-group-block-participants';
+
+function GroupBlockAction({ occurrence, segment, onGroupBlock }: {
+  occurrence: ScheduleOccurrence;
+  segment: ScheduleOccurrence['segments'][number];
+  onGroupBlock: (segmentId: string) => void;
+}) {
+  const { participants, matching } = useGroupBlockParticipants(occurrence, segment);
+  if (participants.isLoading || participants.isError) return null;
+  if (matching.length === 0) return null;
+  if (matching.length === 1) {
+    return <p className="tiny muted" style={{ margin: '9px 0 0' }}>
+      Este bloque tiene un solo paciente. Para cambiarlo, usá «Modificar solo esta fecha».
+    </p>;
+  }
+  return <Button size="sm" onClick={() => onGroupBlock(segment.id)}>
+    Cambiar tramo grupal de esta fecha · {matching.length} pacientes
+  </Button>;
+}
 
 export function OccurrenceSegments({ occurrence, canWrite, onGroupBlock }: {
   occurrence: ScheduleOccurrence; canWrite: boolean; onGroupBlock: (segmentId: string) => void;
@@ -52,12 +71,8 @@ export function OccurrenceSegments({ occurrence, canWrite, onGroupBlock }: {
                     </p>
                   ) : null}
                   {canWrite && segment.groupId ? (
-                    <Button
-                      size="sm"
-                      onClick={() => onGroupBlock(segment.id)}
-                    >
-                      Modificar bloque grupal completo
-                    </Button>
+                    <GroupBlockAction occurrence={occurrence} segment={segment}
+                      onGroupBlock={onGroupBlock} />
                   ) : null}
                 </div>
               ))}

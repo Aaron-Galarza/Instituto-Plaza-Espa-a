@@ -47,7 +47,7 @@ export async function assertCompatibleGroupSessionTx(
     );
     if (!compatible) {
       throw AppError.conflict(
-        'El tramo grupal no coincide con una actividad del grupo en la fecha y horario elegidos. Modificá el bloque grupal completo o quitá la asignación al grupo.',
+        'El tramo grupal no coincide con una actividad del grupo en esa fecha y horario. Para sumar un paciente, usá el mismo horario, espacio y profesionales. Para cambiar un bloque compartido, usá «Cambiar tramo grupal de esta fecha» desde una jornada de ese bloque.',
       );
     }
   }

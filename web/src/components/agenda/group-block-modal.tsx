@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { changeGroupBlockSchema, minutesToTime, timeToMinutes, type ScheduleOccurrence, type ScheduleResponse } from '@plaza/shared';
+import { useMutation } from '@tanstack/react-query';
+import { changeGroupBlockSchema, minutesToTime, timeToMinutes, type ScheduleOccurrence } from '@plaza/shared';
 import { Button, ErrorBox, Field, Input, Modal, Select, Textarea } from '@/components/ui';
 import { api, errorMessage } from '@/lib/api';
 import { conflictsFromError } from '@/lib/conflicts';
 import { dateLabel } from '@/lib/format';
 import type { JourneyReference } from './journey-builder';
+import { useGroupBlockParticipants } from './use-group-block-participants';
 
 export function GroupBlockModal({
   occurrence,
@@ -31,23 +32,7 @@ export function GroupBlockModal({
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [conflicts, setConflicts] = useState<string[]>([]);
-  const participants = useQuery<ScheduleResponse>({
-    queryKey: ['group-block', occurrence.date, segment.groupId],
-    queryFn: () =>
-      api<ScheduleResponse>(
-        `/schedule?from=${occurrence.date}&to=${occurrence.date}&groupId=${segment.groupId}`,
-      ),
-    enabled: Boolean(segment.groupId),
-  });
-  const matching =
-    participants.data?.occurrences.filter((item) =>
-      item.segments.some(
-        (part) =>
-          part.groupId === segment.groupId &&
-          part.startMinute === segment.startMinute &&
-          part.endMinute === segment.endMinute,
-      ),
-    ) ?? [];
+  const { participants, matching } = useGroupBlockParticipants(occurrence, segment);
   const mutation = useMutation({
     mutationFn: (body: unknown) =>
       api('/schedule/group-block/change-date', { method: 'POST', body }),
@@ -93,7 +78,7 @@ export function GroupBlockModal({
     <Modal
       open
       onClose={onClose}
-      title="Modificar bloque grupal completo"
+      title="Cambiar tramo grupal de esta fecha"
       description={`${segment.groupName ?? 'Grupo'} · ${dateLabel(occurrence.date)}`}
       size="wide"
       footer={
@@ -103,18 +88,19 @@ export function GroupBlockModal({
           </Button>
           <Button
             variant="primary"
-            disabled={mutation.isPending || participants.isLoading || participants.isError}
+            disabled={mutation.isPending || participants.isLoading || participants.isError || matching.length < 2}
             onClick={submit}
           >
-            {mutation.isPending ? 'Guardando…' : 'Guardar para todos'}
+            {mutation.isPending ? 'Guardando…' : `Guardar para ${matching.length} pacientes`}
           </Button>
         </>
       }
     >
       <div className="stack gap-12">
         <p className="small muted" style={{ margin: 0 }}>
-          Este cambio se aplicará a {matching.length} jornada{matching.length === 1 ? '' : 's'} del
-          mismo bloque. Las demás prestaciones de cada paciente se conservarán.
+          Cambia este tramo para los {matching.length} pacientes que comparten el grupo y el horario
+          el {dateLabel(occurrence.date)}. Las demás prestaciones de cada paciente se conservan.
+          Las semanas siguientes no cambian.
         </p>
         {participants.isError ? <ErrorBox message={errorMessage(participants.error)} /> : null}
         {error ? <ErrorBox message={error} /> : null}
@@ -178,7 +164,7 @@ export function GroupBlockModal({
                 ))}
             </div>
           </Field>
-          <Field label="Motivo del cambio" className="span-2">
+          <Field label="Motivo del cambio *" className="span-2">
             <Textarea value={reason} onChange={(event) => setReason(event.target.value)} rows={2} />
           </Field>
         </div>
