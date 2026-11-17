@@ -16,7 +16,7 @@ export function ProfessionalsTable({ data, canWrite, linkedUserName, onView, onE
                 <thead>
                   <tr>
                     <th>Profesional</th>
-                    <th>Especialidades</th>
+                    <th>Prestaciones</th>
                     <th>Contacto</th>
                     <th>Usuario</th>
                     <th>Estado</th>

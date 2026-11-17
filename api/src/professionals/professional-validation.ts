@@ -1,6 +1,27 @@
 import { type Professional, type SessionUser } from '@plaza/shared';
 import { AppError } from '../common/errors';
 import type { DataStore } from '../database/data-store';
+import { normalizeForSearch } from '../common/search';
+
+export async function resolveProfessionalServices(
+  tx: DataStore,
+  selected: string[],
+  previous: string[] = [],
+): Promise<string[]> {
+  const services = await tx.repo('services').all();
+  const prior = new Map(previous.map((name) => [normalizeForSearch(name), name]));
+  const resolved = selected.map((name) => {
+    const key = normalizeForSearch(name.trim());
+    const service = services.find((item) => normalizeForSearch(item.name) === key);
+    if (service?.status === 'active') return service.name;
+    if (prior.has(key)) return prior.get(key)!;
+    throw AppError.validation(`La prestación «${name}» no está disponible.`);
+  });
+  if (new Set(resolved.map(normalizeForSearch)).size !== resolved.length) {
+    throw AppError.validation('No repitas prestaciones.');
+  }
+  return resolved;
+}
 
 export function sanitizeProfessional(professional: Professional, user: SessionUser): Professional {
   if (user.role !== 'professional') return professional;

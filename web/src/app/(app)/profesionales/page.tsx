@@ -23,7 +23,7 @@ import { ProfessionalDetail } from './professional-detail';
 import { ProfessionalHeader } from './professional-header';
 import { ProfessionalDeleteDialog } from './professional-delete-dialog';
 import { useAuth } from '@/lib/auth';
-import { useDebouncedValue } from '@/lib/queries';
+import { useDebouncedValue, useServices } from '@/lib/queries';
 import { api, errorMessage, queryString } from '@/lib/api';
 import { useToast } from '@/lib/toast';
 import { professionalDefaults, professionalFields } from './professional-fields';
@@ -32,6 +32,7 @@ export default function ProfessionalsPage() {
   const { can } = useAuth();
   const queryClient = useQueryClient();
   const { notify } = useToast();
+  const services = useServices();
   const canWrite = can('professionals:write');
   const canSeeUsers = can('users:manage');
 
@@ -110,7 +111,7 @@ export default function ProfessionalsPage() {
   });
 
   const defaults = professionalDefaults(editing);
-  const fields = professionalFields(canSeeUsers, users.data?.items ?? []);
+  const fields = professionalFields(canSeeUsers, users.data?.items ?? [], services.data ?? [], editing);
 
   const linkedUserName = (userId: string | null | undefined) =>
     userId ? (users.data?.items.find((user) => user.id === userId)?.name ?? '—') : '—';
@@ -169,7 +170,7 @@ export default function ProfessionalsPage() {
           setEditing(null);
         }}
         title={editing ? 'Editar profesional' : 'Nuevo profesional'}
-        description="Datos de contacto, especialidades y color de agenda. El vínculo con un usuario es opcional."
+        description="Elegí prestaciones existentes, completá el contacto y el color de agenda. El vínculo con un usuario es opcional."
         schema={createProfessionalSchema}
         defaultValues={defaults}
         fields={fields}
@@ -180,7 +181,9 @@ export default function ProfessionalsPage() {
         busy={save.isPending}
         error={save.isError ? errorMessage(save.error) : undefined}
         size="wide"
-      />
+      >
+        {services.isError ? <ErrorBox message={`No se pudieron cargar las prestaciones: ${errorMessage(services.error)}`} /> : null}
+      </EntityFormModal>
 
       <ProfessionalDetail open={Boolean(viewId)} onClose={() => setViewId(null)} detail={detail} />
 

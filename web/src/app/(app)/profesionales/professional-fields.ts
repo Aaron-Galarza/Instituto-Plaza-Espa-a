@@ -1,26 +1,33 @@
-import { DEFAULT_PROFESSIONAL_COLOR, type Professional, type User } from '@plaza/shared';
+import { DEFAULT_PROFESSIONAL_COLOR, type Professional, type Service, type User } from '@plaza/shared';
 import type { EntityField } from '@/components/entity-form';
 
 export function professionalDefaults(editing: Professional | null) {
   return editing ? {
-    firstName: editing.firstName, lastName: editing.lastName, specialties: editing.specialties.join(', '),
+    firstName: editing.firstName, lastName: editing.lastName, specialties: editing.specialties,
     color: editing.color, phone: editing.phone ?? '', email: editing.email ?? '',
     userId: editing.userId ?? '', status: editing.status,
-  } : { firstName: '', lastName: '', specialties: '', color: DEFAULT_PROFESSIONAL_COLOR,
+  } : { firstName: '', lastName: '', specialties: [], color: DEFAULT_PROFESSIONAL_COLOR,
     phone: '', email: '', userId: '', status: 'active' };
 }
 
-export function professionalFields(canSeeUsers: boolean, users: User[]): EntityField[] {
+export function professionalFields(canSeeUsers: boolean, users: User[], services: Service[], editing: Professional | null): EntityField[] {
+  const options = services.filter((service) => service.status === 'active').map((service) => ({
+    value: service.name, label: service.name,
+  }));
+  for (const name of editing?.specialties ?? []) {
+    if (!options.some((option) => option.value === name)) options.push({ value: name, label: `${name} (no disponible)` });
+  }
   const fields: EntityField[] = [
     { name: 'firstName', label: 'Nombre', required: true },
     { name: 'lastName', label: 'Apellido', required: true },
     {
       name: 'specialties',
-      label: 'Especialidades',
+      label: 'Prestaciones',
+      type: 'checkboxes',
       required: true,
       span2: true,
-      placeholder: 'Kinesiología, Terapia ocupacional',
-      hint: 'Separá las especialidades con comas.',
+      options,
+      hint: 'Elegí las prestaciones cargadas en el sistema. Si no hay opciones, creá una en Prestaciones primero.',
     },
     {
       name: 'color',

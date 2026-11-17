@@ -13,8 +13,8 @@ import { DATA_STORE } from '../config/tokens';
 import type { DataStore } from '../database/data-store';
 import { AppError } from '../common/errors';
 import { AuditService } from '../audit/audit.service';
-import { sanitizeProfessional, assertUserLinkAvailable } from './professional-validation';
-import { matchesSearch, nullIfEmpty, personName, uniq } from '../common/search';
+import { sanitizeProfessional, assertUserLinkAvailable, resolveProfessionalServices } from './professional-validation';
+import { matchesSearch, nullIfEmpty, personName } from '../common/search';
 
 @Injectable()
 export class ProfessionalsService {
@@ -47,12 +47,13 @@ export class ProfessionalsService {
   async create(actor: SessionUser, input: CreateProfessionalInput): Promise<Professional> {
     return this.store.transaction(async (tx) => {
       if (input.userId) await assertUserLinkAvailable(tx, input.userId, null);
+      const specialties = await resolveProfessionalServices(tx, input.specialties);
       const now = new Date().toISOString();
       const professional: Professional = {
         id: randomUUID(),
         firstName: input.firstName,
         lastName: input.lastName,
-        specialties: uniq(input.specialties),
+        specialties,
         color: input.color,
         phone: nullIfEmpty(input.phone),
         email: nullIfEmpty(input.email),
@@ -87,6 +88,9 @@ export class ProfessionalsService {
     return this.store.transaction(async (tx) => {
       const current = await tx.repo('professionals').findById(id);
       if (!current) throw AppError.notFound('Profesional');
+      const specialties = input.specialties === undefined
+        ? undefined
+        : await resolveProfessionalServices(tx, input.specialties, current.specialties);
 
       let userIdChanged = false;
       const nextUserId = input.userId !== undefined ? input.userId : (current.userId ?? null);
@@ -107,7 +111,7 @@ export class ProfessionalsService {
       const patch: Partial<Professional> = {
         ...(input.firstName !== undefined ? { firstName: input.firstName } : {}),
         ...(input.lastName !== undefined ? { lastName: input.lastName } : {}),
-        ...(input.specialties !== undefined ? { specialties: uniq(input.specialties) } : {}),
+        ...(specialties !== undefined ? { specialties } : {}),
         ...(input.color !== undefined ? { color: input.color } : {}),
         ...(input.phone !== undefined ? { phone: nullIfEmpty(input.phone) } : {}),
         ...(input.email !== undefined ? { email: nullIfEmpty(input.email) } : {}),

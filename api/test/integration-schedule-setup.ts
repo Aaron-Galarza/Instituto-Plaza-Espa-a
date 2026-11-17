@@ -3,6 +3,17 @@ import type { ScenarioContext } from './integration-harness';
 
 export async function setupSchedule(ctx: ScenarioContext) {
   const { request, adminCookie, directorCookie, patientId } = ctx;
+    const serviceResponse = await request(
+      'POST',
+      '/services',
+      {
+        name: 'Kinesiología',
+        allowedModalities: ['individual'],
+      },
+      adminCookie,
+    );
+    expect(serviceResponse.statusCode).toBe(201);
+    const serviceId = serviceResponse.json().id as string;
     const professionalResponse = await request(
       'POST',
       '/professionals',
@@ -16,17 +27,6 @@ export async function setupSchedule(ctx: ScenarioContext) {
     );
     expect(professionalResponse.statusCode).toBe(201);
     const professionalId = professionalResponse.json().id as string;
-    const serviceResponse = await request(
-      'POST',
-      '/services',
-      {
-        name: 'Kinesiología',
-        allowedModalities: ['individual'],
-      },
-      adminCookie,
-    );
-    expect(serviceResponse.statusCode).toBe(201);
-    const serviceId = serviceResponse.json().id as string;
     const availability = await request(
       'POST',
       '/availability',

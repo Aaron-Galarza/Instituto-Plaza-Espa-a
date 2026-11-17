@@ -12,7 +12,7 @@ export function ProfessionalFilters({ search, status, onSearch, onStatus }: {
           <Input
             type="search"
             value={search}
-            placeholder="Nombre, apellido o especialidad"
+            placeholder="Nombre, apellido o prestación"
             onChange={(event) => onSearch(event.target.value)}
           />
         </Field>

@@ -16,6 +16,7 @@ import { checkRequestAdjustment } from './integration-request-adjustment';
 import { checkSeriesSplit } from './integration-series-split';
 import { checkGroupChanges } from './integration-groups';
 import { checkRollingConflicts } from './integration-rolling-conflicts';
+import { checkProfessionalServices } from './integration-professional-services';
 
 let directory: string;
 let app: NestFastifyApplication;
@@ -126,6 +127,10 @@ describe('API integrada con archivo de prueba aislado', () => {
     );
     expect(dashboard.statusCode).toBe(200);
     expect(dashboard.json().metrics.uniquePatients).toBe(0);
+  });
+
+  it('asigna prestaciones existentes a los profesionales y conserva los vínculos', async () => {
+    await checkProfessionalServices(request, adminCookie);
   });
 
   it('programa recurrencias, aplica permisos y resuelve cambios y ausencias', async () => {

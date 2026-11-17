@@ -20,7 +20,7 @@ export function ProfessionalDetail({ open, onClose, detail }: {
           <div className="stack gap-16">
             <dl className="detail-list">
               <div className="detail-row">
-                <dt>Especialidades</dt>
+                <dt>Prestaciones</dt>
                 <dd>{detail.data.specialties.join(', ')}</dd>
               </div>
               <div className="detail-row">

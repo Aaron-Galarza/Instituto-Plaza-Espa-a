@@ -12,7 +12,7 @@ import {
 export const professionalSchema = entityMetaSchema.extend({
   firstName: z.string().trim().min(1).max(80),
   lastName: z.string().trim().min(1).max(80),
-  specialties: z.array(z.string().trim().min(1).max(80)).min(1).max(10),
+  specialties: z.array(z.string().trim().min(1).max(120)).min(1).max(10),
   color: hexColorSchema,
   phone: shortTextSchema.nullable().optional(),
   email: z.string().trim().email().max(160).nullable().optional(),
@@ -25,7 +25,7 @@ export const createProfessionalSchema = z.object({
   firstName: z.string().trim().min(1, 'Ingresá el nombre').max(80),
   lastName: z.string().trim().min(1, 'Ingresá el apellido').max(80),
   specialties: z
-    .union([z.array(z.string().trim().min(1).max(80)), z.string()])
+    .union([z.array(z.string().trim().min(1).max(120)), z.string()])
     .transform((value) =>
       typeof value === 'string'
         ? value
@@ -34,7 +34,7 @@ export const createProfessionalSchema = z.object({
             .filter(Boolean)
         : value,
     )
-    .pipe(z.array(z.string().min(1).max(80)).min(1, 'Indicá al menos una especialidad').max(10)),
+    .pipe(z.array(z.string().min(1).max(120)).min(1, 'Elegí al menos una prestación').max(10)),
   color: hexColorSchema,
   phone: optionalText(40),
   email: z

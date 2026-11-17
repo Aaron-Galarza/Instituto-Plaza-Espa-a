@@ -14,11 +14,11 @@ export const PAGE_HELP = {
   '/pacientes':
     'Acá guardás los datos de las personas que reciben atención. Después las podés agregar a la agenda.',
   '/profesionales':
-    'Acá guardás los datos de quienes atienden a los pacientes. Sus horarios se usan en la agenda.',
+    'Acá guardás los datos de quienes atienden a los pacientes y elegís qué prestaciones pueden brindar. Sus horarios se usan en la agenda.',
   '/obras-sociales':
     'Acá guardás las coberturas de los pacientes para saber a cuál pertenece cada uno.',
   '/prestaciones':
-    'Acá definís qué tipo de atención ofrece el instituto. Luego la elegís en cada jornada.',
+    'Acá definís qué tipos de atención ofrece el instituto. Después los asignás a los profesionales y los elegís en la agenda.',
   '/espacios':
     'Acá anotás los consultorios y lugares de atención, y cuántas personas pueden usarlos a la vez.',
   '/grupos':
@@ -105,7 +105,6 @@ export const HELP: Record<string, string> = {
   notas: 'Escribí una aclaración breve que ayude a organizar este registro.',
   descripción: 'Contá en pocas palabras qué es este elemento.',
   'código interno': 'Es una abreviatura para reconocer rápidamente esta obra social.',
-  especialidades: 'Elegí las áreas en las que trabaja este profesional.',
   'color en la agenda': 'Elegí el color con el que se verá este profesional en la agenda.',
   'usuario vinculado':
     'Une a este profesional con su cuenta de acceso para que vea su propia agenda.',

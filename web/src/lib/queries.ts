@@ -51,6 +51,14 @@ export function useReferenceData() {
   });
 }
 
+export function useServices() {
+  return useQuery<Service[]>({
+    queryKey: ['reference-data', 'services'],
+    queryFn: () => list<Service>('/services'),
+    staleTime: 60_000,
+  });
+}
+
 export function useDebouncedValue<T>(value: T, delay = 250): T {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {

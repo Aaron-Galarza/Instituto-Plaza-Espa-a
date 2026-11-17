@@ -1,7 +1,7 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 
 export function createRequest(app: NestFastifyApplication) {
-  return (method: 'GET' | 'POST' | 'PATCH', url: string, payload?: unknown, cookie?: string) =>
+  return (method: 'GET' | 'POST' | 'PATCH' | 'DELETE', url: string, payload?: unknown, cookie?: string) =>
     app.getHttpAdapter().getInstance().inject({
       method,
       url: `/api/v1${url}`,

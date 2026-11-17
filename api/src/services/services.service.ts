@@ -85,6 +85,18 @@ export class ServicesService {
         ...(input.status !== undefined ? { status: input.status } : {}),
       };
       const updated = await tx.repo('services').update(id, patch);
+      if (input.name !== undefined && input.name !== current.name) {
+        const linked = await tx.repo('professionals').where((professional) =>
+          professional.specialties.some((name) => normalizeForSearch(name) === normalizeForSearch(current.name)),
+        );
+        for (const professional of linked) {
+          await tx.repo('professionals').update(professional.id, {
+            specialties: professional.specialties.map((name) =>
+              normalizeForSearch(name) === normalizeForSearch(current.name) ? updated.name : name,
+            ),
+          });
+        }
+      }
       await this.audit.record(
         {
           actor: { id: actor.id, name: actor.name, role: actor.role },
@@ -108,12 +120,15 @@ export class ServicesService {
       const service = await tx.repo('services').findById(id);
       if (!service) throw AppError.notFound('Prestación');
       const groups = await tx.repo('careGroups').count((group) => group.serviceId === id);
+      const professionals = await tx.repo('professionals').count((professional) =>
+        professional.specialties.some((name) => normalizeForSearch(name) === normalizeForSearch(service.name)),
+      );
       const rules = await tx
         .repo('scheduleRules')
         .count((rule) => rule.segments.some((segment) => segment.serviceId === id));
-      if (groups > 0 || rules > 0) {
+      if (groups > 0 || rules > 0 || professionals > 0) {
         throw AppError.reference(
-          'La prestación tiene grupos o jornadas asociadas. Desactivala en lugar de eliminarla.',
+          'La prestación tiene profesionales, grupos o jornadas asociadas. Desactivala en lugar de eliminarla.',
         );
       }
       await this.audit.record(

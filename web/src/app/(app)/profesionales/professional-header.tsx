@@ -8,7 +8,7 @@ export function ProfessionalHeader({ canWrite, onNew }: { canWrite: boolean; onN
       <PageHeader
         eyebrow="Personas"
         title="Profesionales"
-        lede="Equipo de rehabilitación, especialidades y disponibilidad. El color asignado ordena la lectura de la agenda."
+        lede="Equipo de rehabilitación, prestaciones y disponibilidad. El color asignado ordena la lectura de la agenda."
         actions={
           canWrite ? (
             <Button
