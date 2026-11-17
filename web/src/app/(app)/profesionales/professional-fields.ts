@@ -36,7 +36,7 @@ export function professionalFields(canSeeUsers: boolean, users: User[], services
       hint: 'Se usa para identificar al profesional en la agenda y el tablero.',
     },
     { name: 'phone', label: 'Teléfono', type: 'tel' },
-    { name: 'email', label: 'Correo electrónico', type: 'email' },
+    { name: 'email', label: 'Correo personal', type: 'email' },
     ...(canSeeUsers
       ? [
           {

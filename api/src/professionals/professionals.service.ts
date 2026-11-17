@@ -26,6 +26,7 @@ export class ProfessionalsService {
   async list(user: SessionUser, query: ProfessionalQuery): Promise<PaginatedResult<Professional>> {
     const professionals = await this.store.repo('professionals').all();
     const filtered = professionals.filter((professional) => {
+      if (user.role === 'professional' && professional.id !== user.professionalId) return false;
       if (query.status && professional.status !== query.status) return false;
       if (query.userId && professional.userId !== query.userId) return false;
       return matchesSearch(
@@ -41,6 +42,9 @@ export class ProfessionalsService {
   async get(user: SessionUser, id: string): Promise<Professional> {
     const professional = await this.store.repo('professionals').findById(id);
     if (!professional) throw AppError.notFound('Profesional');
+    if (user.role === 'professional' && id !== user.professionalId) {
+      throw AppError.forbidden('No tenés acceso a este profesional.');
+    }
     return sanitizeProfessional(professional, user);
   }
 

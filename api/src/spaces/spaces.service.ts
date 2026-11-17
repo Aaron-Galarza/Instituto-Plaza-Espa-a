@@ -14,6 +14,7 @@ import type { DataStore } from '../database/data-store';
 import { AppError } from '../common/errors';
 import { AuditService } from '../audit/audit.service';
 import { matchesSearch, normalizeForSearch, nullIfEmpty } from '../common/search';
+import { professionalCatalogScope } from '../common/professional-catalog-scope';
 
 @Injectable()
 export class SpacesService {
@@ -22,9 +23,12 @@ export class SpacesService {
     private readonly audit: AuditService,
   ) {}
 
-  async list(query: SpaceQuery): Promise<PaginatedResult<Space>> {
+  async list(user: SessionUser, query: SpaceQuery): Promise<PaginatedResult<Space>> {
     const spaces = await this.store.repo('spaces').all();
+    const scope = user.role === 'professional'
+      ? (await professionalCatalogScope(this.store, user)).spaceIds : null;
     const filtered = spaces.filter((space) => {
+      if (scope && !scope.has(space.id)) return false;
       if (query.status && space.status !== query.status) return false;
       return matchesSearch(`${space.name} ${space.description ?? ''}`, query.search);
     });
@@ -32,9 +36,13 @@ export class SpacesService {
     return paginate(filtered, query.page, query.pageSize);
   }
 
-  async get(id: string): Promise<Space> {
+  async get(user: SessionUser, id: string): Promise<Space> {
     const space = await this.store.repo('spaces').findById(id);
     if (!space) throw AppError.notFound('Espacio');
+    if (user.role === 'professional' &&
+      !(await professionalCatalogScope(this.store, user)).spaceIds.has(id)) {
+      throw AppError.forbidden('No tenés acceso a este espacio.');
+    }
     return space;
   }
 

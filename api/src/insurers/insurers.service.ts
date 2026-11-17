@@ -14,6 +14,7 @@ import type { DataStore } from '../database/data-store';
 import { AppError } from '../common/errors';
 import { AuditService } from '../audit/audit.service';
 import { matchesSearch, normalizeForSearch, nullIfEmpty } from '../common/search';
+import { professionalCatalogScope } from '../common/professional-catalog-scope';
 
 @Injectable()
 export class InsurersService {
@@ -22,9 +23,12 @@ export class InsurersService {
     private readonly audit: AuditService,
   ) {}
 
-  async list(query: InsurerQuery): Promise<PaginatedResult<Insurer>> {
+  async list(user: SessionUser, query: InsurerQuery): Promise<PaginatedResult<Insurer>> {
     const insurers = await this.store.repo('insurers').all();
+    const scope = user.role === 'professional'
+      ? (await professionalCatalogScope(this.store, user)).insurerIds : null;
     const filtered = insurers.filter((insurer) => {
+      if (scope && !scope.has(insurer.id)) return false;
       if (query.status && insurer.status !== query.status) return false;
       return matchesSearch(`${insurer.name} ${insurer.code ?? ''}`, query.search);
     });
@@ -32,9 +36,13 @@ export class InsurersService {
     return paginate(filtered, query.page, query.pageSize);
   }
 
-  async get(id: string): Promise<Insurer> {
+  async get(user: SessionUser, id: string): Promise<Insurer> {
     const insurer = await this.store.repo('insurers').findById(id);
     if (!insurer) throw AppError.notFound('Obra social');
+    if (user.role === 'professional' &&
+      !(await professionalCatalogScope(this.store, user)).insurerIds.has(id)) {
+      throw AppError.forbidden('No tenés acceso a esta obra social.');
+    }
     return insurer;
   }
 

@@ -23,14 +23,14 @@ export class SpacesController {
 
   @Get()
   @RequirePermissions('spaces:read')
-  list(@Query(zod(spaceQuerySchema)) query: SpaceQuery): Promise<PaginatedResult<Space>> {
-    return this.spaces.list(query);
+  list(@CurrentUser() user: SessionUser, @Query(zod(spaceQuerySchema)) query: SpaceQuery): Promise<PaginatedResult<Space>> {
+    return this.spaces.list(user, query);
   }
 
   @Get(':id')
   @RequirePermissions('spaces:read')
-  get(@Param('id', zod(idSchema)) id: string): Promise<Space> {
-    return this.spaces.get(id);
+  get(@CurrentUser() user: SessionUser, @Param('id', zod(idSchema)) id: string): Promise<Space> {
+    return this.spaces.get(user, id);
   }
 
   @Post()

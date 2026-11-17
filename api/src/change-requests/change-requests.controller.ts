@@ -4,6 +4,7 @@ import {
   adjustChangeRequestSchema,
   changeRequestQuerySchema,
   createChangeRequestSchema,
+  dateOnlySchema,
   idSchema,
   resolveChangeRequestSchema,
   type CancelChangeRequestInput,
@@ -11,15 +12,18 @@ import {
   type ChangeRequest,
   type CreateChangeRequestInput,
   type PaginatedResult,
+  type Professional,
   type ResolveChangeRequestInput,
   type SessionUser,
+  type Space,
 } from '@plaza/shared';
-import type { z } from 'zod';
+import { z } from 'zod';
 import { ChangeRequestsService } from './change-requests.service';
 import { CurrentUser, RequirePermissions } from '../common/auth.decorators';
 import { zod } from '../common/zod.pipe';
 
 type ChangeRequestQueryInput = z.infer<typeof changeRequestQuerySchema>;
+const requestOptionsSchema = z.object({ ruleId: idSchema, date: dateOnlySchema });
 
 @Controller('change-requests')
 export class ChangeRequestsController {
@@ -38,6 +42,15 @@ export class ChangeRequestsController {
   @RequirePermissions('requests:read')
   scopeNote(): { note: string } {
     return { note: this.requests.scopeNote() };
+  }
+
+  @Get('options')
+  @RequirePermissions('requests:read')
+  options(
+    @CurrentUser() user: SessionUser,
+    @Query(zod(requestOptionsSchema)) query: z.infer<typeof requestOptionsSchema>,
+  ): Promise<{ professionals: Professional[]; spaces: Space[] }> {
+    return this.requests.options(user, query.ruleId, query.date);
   }
 
   @Post()

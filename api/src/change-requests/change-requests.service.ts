@@ -25,6 +25,9 @@ export class ChangeRequestsService {
   get(...args: Parameters<ChangeRequestQueries['get']>) {
     return this.queries.get(...args);
   }
+  options(...args: Parameters<ChangeRequestQueries['options']>) {
+    return this.queries.options(...args);
+  }
 
   private get actions(): ChangeRequestActions {
     return new ChangeRequestActions(this.store, this.audit);

@@ -43,6 +43,7 @@ export const GROUPS: NavGroup[] = [
         label: 'Profesionales',
         icon: UserIcon,
         permission: 'professionals:read',
+        roles: ['admin', 'director'],
       },
     ],
   },

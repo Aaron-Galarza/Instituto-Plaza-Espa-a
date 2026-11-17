@@ -14,6 +14,7 @@ import type { DataStore } from '../database/data-store';
 import { AppError } from '../common/errors';
 import { AuditService } from '../audit/audit.service';
 import { matchesSearch, normalizeForSearch, nullIfEmpty, uniq } from '../common/search';
+import { professionalCatalogScope } from '../common/professional-catalog-scope';
 
 @Injectable()
 export class ServicesService {
@@ -22,9 +23,12 @@ export class ServicesService {
     private readonly audit: AuditService,
   ) {}
 
-  async list(query: ServiceQuery): Promise<PaginatedResult<Service>> {
+  async list(user: SessionUser, query: ServiceQuery): Promise<PaginatedResult<Service>> {
     const services = await this.store.repo('services').all();
+    const scope = user.role === 'professional'
+      ? (await professionalCatalogScope(this.store, user)).serviceIds : null;
     const filtered = services.filter((service) => {
+      if (scope && !scope.has(service.id)) return false;
       if (query.status && service.status !== query.status) return false;
       if (query.modality && !service.allowedModalities.includes(query.modality)) return false;
       return matchesSearch(`${service.name} ${service.description ?? ''}`, query.search);
@@ -33,9 +37,13 @@ export class ServicesService {
     return paginate(filtered, query.page, query.pageSize);
   }
 
-  async get(id: string): Promise<Service> {
+  async get(user: SessionUser, id: string): Promise<Service> {
     const service = await this.store.repo('services').findById(id);
     if (!service) throw AppError.notFound('Prestación');
+    if (user.role === 'professional' &&
+      !(await professionalCatalogScope(this.store, user)).serviceIds.has(id)) {
+      throw AppError.forbidden('No tenés acceso a esta prestación.');
+    }
     return service;
   }
 

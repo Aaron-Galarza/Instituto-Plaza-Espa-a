@@ -23,14 +23,14 @@ export class InsurersController {
 
   @Get()
   @RequirePermissions('insurers:read')
-  list(@Query(zod(insurerQuerySchema)) query: InsurerQuery): Promise<PaginatedResult<Insurer>> {
-    return this.insurers.list(query);
+  list(@CurrentUser() user: SessionUser, @Query(zod(insurerQuerySchema)) query: InsurerQuery): Promise<PaginatedResult<Insurer>> {
+    return this.insurers.list(user, query);
   }
 
   @Get(':id')
   @RequirePermissions('insurers:read')
-  get(@Param('id', zod(idSchema)) id: string): Promise<Insurer> {
-    return this.insurers.get(id);
+  get(@CurrentUser() user: SessionUser, @Param('id', zod(idSchema)) id: string): Promise<Insurer> {
+    return this.insurers.get(user, id);
   }
 
   @Post()

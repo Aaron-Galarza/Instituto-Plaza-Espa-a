@@ -28,7 +28,7 @@ export function ProfessionalDetail({ open, onClose, detail }: {
                 <dd>{detail.data.phone || '—'}</dd>
               </div>
               <div className="detail-row">
-                <dt>Correo</dt>
+                <dt>Correo personal</dt>
                 <dd>{detail.data.email || '—'}</dd>
               </div>
               <div className="detail-row">

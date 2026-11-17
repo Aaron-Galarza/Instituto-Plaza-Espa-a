@@ -92,6 +92,7 @@ export const HELP: Record<string, string> = {
   'nombre y apellido': 'Escribí cómo se llama esta persona para reconocerla en el sistema.',
   'correo electrónico':
     'Escribí una dirección de correo válida. En una cuenta de usuario se usa para iniciar sesión.',
+  'correo personal': 'Correo de contacto del profesional. Es distinto del correo de su cuenta para entrar al sistema.',
   contraseña: 'Escribí la clave de la cuenta. No se muestra mientras la escribís.',
   'contraseña inicial': 'Es la primera clave que esta persona usará para entrar.',
   'nueva contraseña': 'Esta clave reemplazará la anterior cuando guardes.',

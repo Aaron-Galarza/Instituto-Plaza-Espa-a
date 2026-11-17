@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { createChangeRequestSchema, isoWeekday, minutesToTime, type ChangeRequest, type CreateChangeRequestInput, type ScheduleOccurrence } from '@plaza/shared';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createChangeRequestSchema, isoWeekday, minutesToTime, type ChangeRequest, type CreateChangeRequestInput, type Professional, type ScheduleOccurrence, type Space } from '@plaza/shared';
 import { Button, ErrorBox, Modal } from '@/components/ui';
-import { api, errorMessage } from '@/lib/api';
+import { api, errorMessage, queryString } from '@/lib/api';
+import { useAuth } from '@/lib/auth';
 import { conflictsFromError } from '@/lib/conflicts';
 import { useToast } from '@/lib/toast';
 import { dateLabel } from '@/lib/format';
@@ -25,6 +26,19 @@ export function RequestChangeModal({
   onCreated: () => void;
 }) {
   const { notify } = useToast();
+  const { user } = useAuth();
+  const options = useQuery<{ professionals: Professional[]; spaces: Space[] }>({
+    queryKey: ['change-request-options', occurrence.ruleId, occurrence.date],
+    queryFn: () => api(`/change-requests/options${queryString({
+      ruleId: occurrence.ruleId, date: occurrence.date,
+    })}`),
+    enabled: open && user?.role === 'professional',
+  });
+  const requestReference = {
+    ...reference,
+    professionals: options.data?.professionals ?? reference.professionals,
+    spaces: options.data?.spaces ?? reference.spaces,
+  };
   const [type, setType] = useState<CreateChangeRequestInput['type']>('cancel_date');
   const [reason, setReason] = useState('');
   const [segmentId, setSegmentId] = useState(occurrence.segments[0]?.id ?? '');
@@ -123,6 +137,7 @@ export function RequestChangeModal({
     >
       <div className="stack gap-12">
         {serverError ? <ErrorBox message={serverError} /> : null}
+        {options.isError ? <ErrorBox message={`No se pudieron cargar las alternativas: ${errorMessage(options.error)}`} /> : null}
         {issues.length > 0 ? (
           <div className="error-box" role="alert">
             <ul className="plain-list">
@@ -136,7 +151,7 @@ export function RequestChangeModal({
         <RequestChangeFields type={type} setType={setType} reason={reason} setReason={setReason}
           segmentId={segmentId} setSegmentId={setSegmentId} professionalId={professionalId}
           setProfessionalId={setProfessionalId} spaceId={spaceId} setSpaceId={setSpaceId}
-          draft={draft} setDraft={setDraft} occurrence={occurrence} reference={reference} />
+          draft={draft} setDraft={setDraft} occurrence={occurrence} reference={requestReference} />
       </div>
     </Modal>
   );

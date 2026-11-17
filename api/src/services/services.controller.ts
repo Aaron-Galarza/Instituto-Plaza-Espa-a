@@ -23,14 +23,14 @@ export class ServicesController {
 
   @Get()
   @RequirePermissions('services:read')
-  list(@Query(zod(serviceQuerySchema)) query: ServiceQuery): Promise<PaginatedResult<Service>> {
-    return this.services.list(query);
+  list(@CurrentUser() user: SessionUser, @Query(zod(serviceQuerySchema)) query: ServiceQuery): Promise<PaginatedResult<Service>> {
+    return this.services.list(user, query);
   }
 
   @Get(':id')
   @RequirePermissions('services:read')
-  get(@Param('id', zod(idSchema)) id: string): Promise<Service> {
-    return this.services.get(id);
+  get(@CurrentUser() user: SessionUser, @Param('id', zod(idSchema)) id: string): Promise<Service> {
+    return this.services.get(user, id);
   }
 
   @Post()
