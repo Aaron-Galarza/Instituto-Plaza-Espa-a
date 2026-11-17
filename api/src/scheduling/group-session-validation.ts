@@ -24,7 +24,10 @@ export async function assertCompatibleGroupSessionTx(
     (item) => item.ruleId !== excludeRuleId && item.status !== 'cancelled',
   );
   for (const segment of grouped) {
-    const compatible = peers.some((item) =>
+    const groupPeers = peers.filter((item) =>
+      item.segments.some((peer) => peer.groupId === segment.groupId));
+    if (groupPeers.length === 0) continue;
+    const compatible = groupPeers.some((item) =>
       item.segments.some(
         (peer) =>
           peer.groupId === segment.groupId &&

@@ -18,6 +18,7 @@ import { checkGroupChanges } from './integration-groups';
 import { checkRollingConflicts } from './integration-rolling-conflicts';
 import { checkProfessionalServices } from './integration-professional-services';
 import { checkProfessionalVisibility } from './integration-professional-visibility';
+import { checkFirstGroupMember } from './integration-group-first-member';
 
 let directory: string;
 let app: NestFastifyApplication;
@@ -144,6 +145,7 @@ describe('API integrada con archivo de prueba aislado', () => {
     await checkRequestAdjustment(ctx);
     await checkSeriesSplit(ctx);
     await checkGroupChanges(ctx);
+    await checkFirstGroupMember(ctx);
     await checkProfessionalVisibility(ctx);
     await checkRollingConflicts(ctx);
   });
