@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { changeScheduleRuleSchema, isoWeekday, WEEKDAY_SHORT_LABELS, type ScheduleOccurrence, type ScheduleRule } from '@plaza/shared';
+import { changeScheduleRuleSchema, isoWeekday, validateRuleShape, WEEKDAY_SHORT_LABELS, type ScheduleOccurrence, type ScheduleRule } from '@plaza/shared';
 import { Button, ErrorBox, LoadingBlock, Modal } from '@/components/ui';
 import { api, errorMessage } from '@/lib/api';
 import { conflictsFromError } from '@/lib/conflicts';
@@ -97,6 +97,11 @@ export function EditRuleModal({
       return;
     }
     const payload = draftToRuleInput(draft);
+    const shapeIssues = validateRuleShape(payload);
+    if (shapeIssues.length > 0) {
+      setIssues(shapeIssues.map((issue) => issue.message));
+      return;
+    }
     const base = {
       startMinute: payload.startMinute,
       endMinute: payload.endMinute,

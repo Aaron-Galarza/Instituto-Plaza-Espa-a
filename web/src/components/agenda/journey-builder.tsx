@@ -15,6 +15,8 @@ export { emptyDraft, draftFromRule, draftToRuleInput, draftSegmentsForDate } fro
 export type { DraftSegment, JourneyDraft, JourneyMode, JourneyReference } from './journey-draft';
 import { SegmentEditor } from './segment-editor';
 import { JourneyNotes } from './journey-notes';
+import { JourneyTimeFields } from './journey-time-fields';
+import { expandJourneyBounds } from './journey-draft';
 
 export function JourneyBuilder({
   mode,
@@ -34,11 +36,9 @@ export function JourneyBuilder({
   const patch = (changes: Partial<JourneyDraft>) => onChange({ ...draft, ...changes });
 
   const updateSegment = (index: number, changes: Partial<DraftSegment>) => {
-    patch({
-      segments: draft.segments.map((segment, current) =>
-        current === index ? { ...segment, ...changes } : segment,
-      ),
-    });
+    const segments = draft.segments.map((segment, current) =>
+      current === index ? { ...segment, ...changes } : segment);
+    onChange(expandJourneyBounds(draft, segments));
   };
 
   return (
@@ -115,30 +115,9 @@ export function JourneyBuilder({
             />
           </Field>
         </div>
-      ) : (
-        <div className="form-grid">
-          <Field label="Horario de la jornada *">
-            <div className="row gap-8">
-              <Input
-                type="time"
-                value={draft.startTime}
-                onChange={(event) => patch({ startTime: event.target.value })}
-                aria-label="Hora de inicio de la jornada"
-              />
-              <span className="muted">–</span>
-              <Input
-                type="time"
-                value={draft.endTime}
-                onChange={(event) => patch({ endTime: event.target.value })}
-                aria-label="Hora de fin de la jornada"
-              />
-            </div>
-          </Field>
-          <Field label="Fecha" hint="El cambio se guarda como excepción de esta fecha.">
-            <Input value={startDateLabel ?? draft.effectiveFrom} readOnly aria-readonly="true" />
-          </Field>
-        </div>
-      )}
+      ) : null}
+
+      <JourneyTimeFields mode={mode} draft={draft} onChange={patch} startDateLabel={startDateLabel} />
 
       <div className={mode !== 'date' ? 'form-grid' : undefined}>
         <JourneyNotes mode={mode} draft={draft} onChange={patch} />

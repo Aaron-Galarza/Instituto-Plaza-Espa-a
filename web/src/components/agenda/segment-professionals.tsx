@@ -2,6 +2,7 @@
 import { type CareGroup, type Professional } from '@plaza/shared';
 import { Field } from '@/components/ui';
 import type { DraftSegment, JourneyReference } from './journey-draft';
+import { professionalOffersService } from './professional-service';
 
 export function SegmentProfessionals({
   index,
@@ -21,6 +22,11 @@ export function SegmentProfessionals({
         .map((id) => reference.professionals.find((professional) => professional.id === id))
         .filter((professional): professional is Professional => Boolean(professional))
     : [];
+  const service = reference.services.find((item) => item.id === segment.serviceId);
+  const matchesService = (professional: Professional) => professionalOffersService(professional, service);
+  const options = reference.professionals.filter((professional) =>
+    (professional.status === 'active' && matchesService(professional)) ||
+    segment.professionalIds.includes(professional.id));
 
   return (
     <Field
@@ -29,7 +35,7 @@ export function SegmentProfessionals({
       hint={
         currentGroup
           ? 'El grupo define sus profesionales.'
-          : 'Podés asignar más de un profesional al mismo tramo.'
+          : 'Solo aparecen profesionales que tienen asignada esta prestación. Podés elegir más de uno.'
       }
     >
       {currentGroup ? (
@@ -51,13 +57,9 @@ export function SegmentProfessionals({
           role="group"
           aria-label={`Profesionales del tramo ${index + 1}`}
         >
-          {reference.professionals
-            .filter(
-              (professional) =>
-                professional.status === 'active' ||
-                segment.professionalIds.includes(professional.id),
-            )
-            .map((professional) => (
+          {options.length === 0 ? (
+            <span className="field-hint">No hay profesionales con esta prestación. Asignala primero en Profesionales.</span>
+          ) : options.map((professional) => (
               <label className="check" key={professional.id}>
                 <input
                   type="checkbox"
@@ -72,6 +74,7 @@ export function SegmentProfessionals({
                 />
                 <span className="dot" style={{ color: professional.color }} aria-hidden="true" />
                 {professional.firstName} {professional.lastName}
+                {!matchesService(professional) ? ' (asignación anterior; revisar)' : ''}
               </label>
             ))}
         </div>

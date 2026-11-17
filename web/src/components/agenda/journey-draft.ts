@@ -44,6 +44,16 @@ export interface JourneyReference {
   groups: CareGroup[];
 }
 
+export function expandJourneyBounds(draft: JourneyDraft, segments: DraftSegment[]): JourneyDraft {
+  const startTime = segments.reduce((earliest, segment) =>
+    segment.startTime && (!earliest || segment.startTime < earliest) ? segment.startTime : earliest,
+  draft.startTime);
+  const endTime = segments.reduce((latest, segment) =>
+    segment.endTime && (!latest || segment.endTime > latest) ? segment.endTime : latest,
+  draft.endTime);
+  return { ...draft, segments, startTime, endTime };
+}
+
 function safeMinutes(value: string, fallback: number): number {
   try {
     return timeToMinutes(value);

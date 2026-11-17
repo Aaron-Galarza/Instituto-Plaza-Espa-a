@@ -10,6 +10,7 @@ import {
   weekdaySchema,
 } from './common';
 import { modalitySchema } from './service';
+import { formatMinutesRange } from '../utils/date';
 
 export const scheduleRuleStatusSchema = z.enum(['active', 'cancelled', 'finished']);
 export type ScheduleRuleStatus = z.infer<typeof scheduleRuleStatusSchema>;
@@ -104,7 +105,7 @@ export function validateRuleShape(shape: {
     if (segment.startMinute < shape.startMinute || segment.endMinute > shape.endMinute) {
       issues.push({
         path: `segments.${index}`,
-        message: 'El tramo debe estar contenido en la jornada',
+        message: `El tramo ${index + 1} (${formatMinutesRange(segment.startMinute, segment.endMinute)}) queda fuera del horario de la jornada (${formatMinutesRange(shape.startMinute, shape.endMinute)}).`,
       });
     }
   });

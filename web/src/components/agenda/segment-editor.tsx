@@ -4,6 +4,7 @@ import { Field, IconButton, Input, Select } from '@/components/ui';
 import { TrashIcon } from '@/components/icons';
 import type { DraftSegment, JourneyDraft, JourneyReference } from './journey-draft';
 import { SegmentProfessionals } from './segment-professionals';
+import { professionalOffersService } from './professional-service';
 
 export function SegmentEditor({
   index,
@@ -60,12 +61,15 @@ export function SegmentEditor({
                 ? segment.modality
                 : (nextService?.allowedModalities[0] ?? 'individual');
               const nextGroup = reference.groups.find((group) => group.id === segment.groupId);
+              const keepGroup = nextGroup?.serviceId === event.target.value && nextGroup.modality === nextModality;
               onChange({
                 serviceId: event.target.value,
                 modality: nextModality,
-                groupId: nextGroup?.serviceId === event.target.value ? segment.groupId : '',
+                groupId: keepGroup ? segment.groupId : '',
+                professionalIds: keepGroup ? nextGroup.professionalIds : segment.professionalIds.filter((id) =>
+                  professionalOffersService(reference.professionals.find((item) => item.id === id), nextService)),
                 spaceId:
-                  nextGroup?.serviceId === event.target.value
+                  keepGroup
                     ? (nextGroup.spaceId ?? '')
                     : segment.spaceId,
               });
@@ -90,6 +94,9 @@ export function SegmentEditor({
               onChange({
                 modality,
                 groupId: group?.modality === modality ? segment.groupId : '',
+                professionalIds: group?.modality === modality ? segment.professionalIds :
+                  segment.professionalIds.filter((id) => professionalOffersService(
+                    reference.professionals.find((item) => item.id === id), service)),
               });
             }}
           >
